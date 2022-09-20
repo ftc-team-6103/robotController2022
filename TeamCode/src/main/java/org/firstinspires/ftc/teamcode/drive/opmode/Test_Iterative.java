@@ -58,8 +58,8 @@ public class Test_Iterative extends OpMode
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftFront = null;
     private DcMotor rightFront = null;
-    private DcMotor Leftrear = null;
-    private DcMotor rightrear = null;
+    private DcMotor leftRear = null;
+    private DcMotor rightRear = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -71,8 +71,10 @@ public class Test_Iterative extends OpMode
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        leftFront  = hardwareMap.get(DcMotor.class, "left_front");
+        rightFront = hardwareMap.get(DcMotor.class, "right_front");
+        leftRear  = hardwareMap.get(DcMotor.class, "left_rear");
+        rightRear  = hardwareMap.get(DcMotor.class, "right_rear");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
