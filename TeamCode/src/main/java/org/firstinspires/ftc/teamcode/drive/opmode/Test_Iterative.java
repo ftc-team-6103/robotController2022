@@ -56,8 +56,10 @@ public class Test_Iterative extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
+    private DcMotor leftFront = null;
+    private DcMotor rightFront = null;
+    private DcMotor Leftrear = null;
+    private DcMotor rightrear = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
