@@ -123,10 +123,30 @@ public class Test_Iterative extends OpMode
         leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
         rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 
+        //Gamepad controls
+        boolean leftBumper = gamepad1.left_bumper;
+        boolean rightBumper = gamepad1.right_bumper;
+
         // Tank Mode uses one stick to control each wheel.
         // - This requires no math, but it is hard to drive forward slowly and keep straight.
         // leftPower  = -gamepad1.left_stick_y ;
         // rightPower = -gamepad1.right_stick_y ;
+
+        if (leftBumper) {
+            leftFront.setPower(-0.25);
+            leftRear.setPower(-0.25);
+            rightFront.setPower(0.25);
+            rightRear.setPower(0.25);
+        }
+
+        if (rightBumper) {
+            leftFront.setPower(0.25);
+            leftRear.setPower(0.25);
+            rightFront.setPower(-0.25);
+            rightRear.setPower(-0.25);
+        }
+
+
 
         // Send calculated power to wheels
         leftFront.setPower(leftPower);
