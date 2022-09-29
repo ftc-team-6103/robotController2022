@@ -61,6 +61,21 @@ public class Test_Iterative extends OpMode
     private DcMotor leftRear = null;
     private DcMotor rightRear = null;
 
+    private void pivotLeft(double speed){
+        leftFront.setPower(-speed);
+        leftRear.setPower(-speed);
+        rightFront.setPower(speed);
+        rightRear.setPower(speed);
+    }
+
+    private void pivotRight(double speed){
+        leftFront.setPower(speed);
+        leftRear.setPower(speed);
+        rightFront.setPower(-speed);
+        rightRear.setPower(-speed);
+    }
+
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -133,17 +148,11 @@ public class Test_Iterative extends OpMode
         // rightPower = -gamepad1.right_stick_y ;
 
         if (leftBumper) {
-            leftFront.setPower(-0.25);
-            leftRear.setPower(-0.25);
-            rightFront.setPower(0.25);
-            rightRear.setPower(0.25);
+            pivotLeft(0.25);
         }
 
         if (rightBumper) {
-            leftFront.setPower(0.25);
-            leftRear.setPower(0.25);
-            rightFront.setPower(-0.25);
-            rightRear.setPower(-0.25);
+            pivotRight( 0.25);
         }
 
 
