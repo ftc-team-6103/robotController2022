@@ -129,8 +129,10 @@ public class Test_Iterative extends OpMode
         // rightPower = -gamepad1.right_stick_y ;
 
         // Send calculated power to wheels
-        leftDrive.setPower(leftPower);
-        rightDrive.setPower(rightPower);
+        leftFront.setPower(leftPower);
+        leftRear.setPower(leftPower);
+        rightFront.setPower(rightPower);
+        rightRear.setPower(rightPower);
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
