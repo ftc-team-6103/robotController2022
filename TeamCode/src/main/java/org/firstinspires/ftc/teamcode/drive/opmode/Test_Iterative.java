@@ -33,8 +33,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import org.firstinspires.ftc.teamcode.util.Encoder;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -60,6 +62,7 @@ public class Test_Iterative extends OpMode
     private DcMotor rightFront = null;
     private DcMotor leftRear = null;
     private DcMotor rightRear = null;
+    private DcMotor liftMotor = null;
 
     private void pivotLeft(double speed){
         leftFront.setPower(-speed);
@@ -90,6 +93,7 @@ public class Test_Iterative extends OpMode
         rightFront = hardwareMap.get(DcMotor.class, "right_front");
         leftRear  = hardwareMap.get(DcMotor.class, "left_rear");
         rightRear  = hardwareMap.get(DcMotor.class, "right_rear");
+        liftMotor = hardwareMap.get(DcMotor.class,"lift_motor");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
@@ -98,6 +102,7 @@ public class Test_Iterative extends OpMode
         rightFront.setDirection(DcMotor.Direction.FORWARD);
         leftRear.setDirection(DcMotor.Direction.REVERSE);
         rightRear.setDirection(DcMotor.Direction.FORWARD);
+        liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
         // Tell the driver that initialization is complete.
@@ -109,6 +114,37 @@ public class Test_Iterative extends OpMode
      */
     @Override
     public void init_loop() {
+
+        /*
+        double liftControl = -gamepad1.left_stick_y;
+        liftMotor.setPower(liftControl);
+        */
+
+        boolean xButton = gamepad1.x;
+        boolean squareButton = gamepad1.square;
+        boolean triangleButton = gamepad1.triangle;
+        boolean rightBumper = gamepad1.right_bumper;
+
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        if (rightBumper) {
+            liftMotor.setTargetPosition(0);
+        }
+
+        if (xButton) {
+            liftMotor.setTargetPosition(25);
+        }
+
+        if (squareButton) {
+            liftMotor.setTargetPosition(50);
+        }
+
+        if (triangleButton) {
+            liftMotor.setTargetPosition(75);
+        }
+
+        telemetry.addData("Status", "Run Time: " + runtime.toString());
+        telemetry.addData("Lift Motor Position", liftMotor.getCurrentPosition());
     }
 
     /*
@@ -174,5 +210,4 @@ public class Test_Iterative extends OpMode
     @Override
     public void stop() {
     }
-
 }
