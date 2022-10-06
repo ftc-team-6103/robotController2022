@@ -53,7 +53,7 @@ import org.firstinspires.ftc.teamcode.util.Encoder;
  */
 
 @TeleOp(name="Basic: Iterative OpMode", group="Iterative Opmode")
-@Disabled
+
 public class Test_Iterative extends OpMode
 {
     // Declare OpMode members.
