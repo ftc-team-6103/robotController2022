@@ -149,7 +149,7 @@ public class LiftTester extends OpMode
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Motors", "lift (%.2f)", lift);
-        telemetry.addData("lift position", "(%.2f)",liftMotor.getCurrentPosition());
+        telemetry.addData("lift position", "(%.2f)", String.valueOf(liftMotor.getCurrentPosition()));
     }
 
     /*
