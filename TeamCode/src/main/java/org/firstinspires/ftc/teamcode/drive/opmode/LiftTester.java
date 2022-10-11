@@ -135,6 +135,7 @@ public class LiftTester extends OpMode
             liftMotor.setTargetPosition(0);
             liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             liftMotor.setTargetPosition(50);
+            liftMotor.setPower(0.5);
         }
 
         if (triangle) {
@@ -149,7 +150,7 @@ public class LiftTester extends OpMode
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Motors", "lift (%.2f)", lift);
-        //telemetry.addData("lift position", String.valueOf(liftMotor.getCurrentPosition()));
+        telemetry.addData("lift position", "Lift Position: " + liftMotor.getCurrentPosition());
     }
 
     /*
