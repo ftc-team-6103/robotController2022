@@ -136,8 +136,8 @@ public class LiftTester extends OpMode
         }
 
         if (square) {
+            liftMotor.setTargetPosition(1500);
             liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            liftMotor.setTargetPosition(50);
             liftMotor.setPower(0.5);
         }
 
