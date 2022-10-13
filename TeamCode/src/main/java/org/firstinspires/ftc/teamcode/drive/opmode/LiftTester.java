@@ -76,6 +76,7 @@ public class LiftTester extends OpMode
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         liftMotor.setDirection(DcMotor.Direction.REVERSE);
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -101,6 +102,7 @@ public class LiftTester extends OpMode
      */
     @Override
     public void loop() {
+
         // Setup a variable for each drive wheel to save power level for telemetry
 
         // Choose to drive using either Tank Mode, or POV Mode
@@ -114,6 +116,8 @@ public class LiftTester extends OpMode
         boolean triangle = gamepad1.triangle;
         boolean rightBumper = gamepad1.right_bumper;
 
+        liftMotor.setTargetPosition(0);
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         // Tank Mode uses one stick to control each wheel.
         // - This requires no math, but it is hard to drive forward slowly and keep straight.
         // leftPower  = -gamepad1.left_stick_y ;
@@ -122,32 +126,32 @@ public class LiftTester extends OpMode
         // Send calculated power to wheels
 
         if (rightBumper) {
-
-            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             liftMotor.setTargetPosition(0);
-            liftMotor.setPower(0.5);
+            while(rightBumper){
+                liftMotor.setPower(0.5);
+            }
         }
 
-        if (x) {
-            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while (x) {
             liftMotor.setTargetPosition(25);
             liftMotor.setPower(0.5);
 
         }
 
-        if (square) {
+        while (square) {
             liftMotor.setTargetPosition(1500);
-            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             liftMotor.setPower(0.5);
         }
 
-        if (triangle) {
-            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while (triangle) {
             liftMotor.setTargetPosition(75);
+            liftMotor.setPower(0.5);
         }
 
-        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        liftMotor.setPower(lift/2);
+        while (Math.abs(lift) > 0) {
+            liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            liftMotor.setPower(lift/2);
+        }
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
