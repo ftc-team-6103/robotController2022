@@ -76,7 +76,6 @@ public class LiftTester extends OpMode
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         liftMotor.setDirection(DcMotor.Direction.REVERSE);
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -100,6 +99,19 @@ public class LiftTester extends OpMode
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
+
+    int targetDestination = 0;
+
+    private void moveToDestination(int destination) {
+        targetDestination = destination;
+        liftMotor.setTargetPosition(destination);
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        if (Math.abs(targetDestination - liftMotor.getCurrentPosition()) > 0) {
+            liftMotor.setPower(50);
+        }
+
+    }
+
     @Override
     public void loop() {
 
@@ -114,10 +126,8 @@ public class LiftTester extends OpMode
         boolean x = gamepad1.x;
         boolean square = gamepad1.square;
         boolean triangle = gamepad1.triangle;
-        boolean rightBumper = gamepad1.right_bumper;
-
-        liftMotor.setTargetPosition(0);
-        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        float rightTrigger = gamepad1.right_trigger;
+        float leftTrigger = gamepad1.left_trigger;
         // Tank Mode uses one stick to control each wheel.
         // - This requires no math, but it is hard to drive forward slowly and keep straight.
         // leftPower  = -gamepad1.left_stick_y ;
@@ -125,33 +135,32 @@ public class LiftTester extends OpMode
 
         // Send calculated power to wheels
 
-        if (rightBumper) {
-            liftMotor.setTargetPosition(0);
-            while(rightBumper){
-                liftMotor.setPower(0.5);
+
+        if (leftTrigger > 0.25) {
+            if (Math.abs(lift) > 0.25) {
+                liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                liftMotor.setPower(lift);
             }
+            liftMotor.setPower(0);
+            targetDestination = liftMotor.getCurrentPosition();
         }
 
-        while (x) {
-            liftMotor.setTargetPosition(25);
-            liftMotor.setPower(0.5);
-
+        if (rightTrigger > 0.25) {
+            moveToDestination(0);
         }
 
-        while (square) {
-            liftMotor.setTargetPosition(1500);
-            liftMotor.setPower(0.5);
+        if (x) {
+            moveToDestination(750);
         }
 
-        while (triangle) {
-            liftMotor.setTargetPosition(75);
-            liftMotor.setPower(0.5);
+        if (square) {
+            moveToDestination(1500);
         }
 
-        while (Math.abs(lift) > 0) {
-            liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            liftMotor.setPower(lift/2);
+        if (triangle) {
+            moveToDestination(3000);
         }
+
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
