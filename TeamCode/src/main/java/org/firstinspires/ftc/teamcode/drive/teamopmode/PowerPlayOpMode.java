@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.drive.teamopmode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -13,12 +14,17 @@ import org.firstinspires.ftc.teamcode.hardware.Lift;
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(group = "drive")
 public class PowerPlayOpMode extends LinearOpMode {
 
-    Claw claw;
-    Servo clawServo;
-    Arm arm;
-    Servo armServo;
-    Lift lift;
-    DcMotor liftMotor;
+    private Claw claw;
+    private Servo clawServo;
+    private Arm arm;
+    private Servo armServo;
+    private Lift lift;
+    private DcMotor liftMotor;
+    private DigitalChannel liftButtonSensor;
+
+    private static final double THROTTLE = 0.5;
+    private static final double STRAFE_THROTTLE = 0.5;
+    private static final double ROTATION_THROTTLE = 0.5;
 
     @Override
     public void runOpMode() throws InterruptedException{
@@ -29,7 +35,8 @@ public class PowerPlayOpMode extends LinearOpMode {
         armServo = hardwareMap.get(Servo.class, "gate_servo");
         arm = new Arm(armServo);
         liftMotor = hardwareMap.get(DcMotor.class, "lift_motor");
-        lift = new Lift(liftMotor);
+        liftButtonSensor = hardwareMap.get(DigitalChannel.class, "lift_button_sensor");
+        lift = new Lift(liftMotor, liftButtonSensor);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -38,9 +45,9 @@ public class PowerPlayOpMode extends LinearOpMode {
         while (!isStopRequested()){
             drive.setWeightedDrivePower(
                     new Pose2d(
-                            -gamepad1.left_stick_y,
-                            -gamepad1.left_stick_x,
-                            -gamepad1.right_stick_x
+                            -gamepad1.left_stick_y * THROTTLE,
+                            -gamepad1.left_stick_x * STRAFE_THROTTLE,
+                            -gamepad1.right_stick_x * ROTATION_THROTTLE
                     )
             );
 
@@ -53,17 +60,17 @@ public class PowerPlayOpMode extends LinearOpMode {
                 claw.close();
             }
 
-            if (gamepad2.x && liftMotor.getCurrentPosition() > Lift.MIN_LIFT_ROTATE_POSITION){
+            if (gamepad2.x){
                 arm.rotateForward();
             }
-            else if (gamepad2.y && liftMotor.getCurrentPosition() > Lift.MIN_LIFT_ROTATE_POSITION){
+            else if (gamepad2.y){
                 arm.rotateRear();
             }
 
-            if(gamepad2.right_stick_y < 0 && liftMotor.getCurrentPosition() < Lift.MAX_LIFT_MOTOR_POSITION){
+            if(gamepad2.right_stick_y < 0){
                 lift.raise(gamepad2.right_stick_y);
             }
-            else if (gamepad2.right_stick_y > 0 && Math.abs(liftMotor.getCurrentPosition()) > Lift.MIN_LIFT_MOTOR_POSITION){
+            else if (gamepad2.right_stick_y > 0){
                 lift.lower(gamepad2.right_stick_y);
             }
             else{
@@ -72,6 +79,8 @@ public class PowerPlayOpMode extends LinearOpMode {
 
             telemetry.addData("Right Stick Y: ", gamepad2.right_stick_y);
             telemetry.addData("Lift Motor Position: ", liftMotor.getCurrentPosition());
+            telemetry.addData("Lift Button Sensor: ", liftButtonSensor.getState());
+            telemetry.addData("Throttle Values: " , THROTTLE + "-" + STRAFE_THROTTLE + "-" + ROTATION_THROTTLE);
             telemetry.update();
         }
 
