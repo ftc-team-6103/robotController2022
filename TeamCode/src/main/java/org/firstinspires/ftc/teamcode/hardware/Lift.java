@@ -10,8 +10,22 @@ public class Lift {
     public static int MIN_LIFT_MOTOR_POSITION = 0;
     public static int MIN_LIFT_ROTATE_POSITION = 1000;
 
+    public static int LIFT_GROUND_POSITION = -100;
+    public static int LIFT_LOW_TERMINAL = -1000;
+    public static int LIFT_MID_TERMINAL = -2000;
+    public static int LIFT_HIGH_TERMINAL = -3000;
+
+    private static final double AUTONOMOUS_POWER = 0.5;
+
     private DcMotor liftMotor;
     private DigitalChannel liftButtonSensor;
+
+    public Lift (DcMotor liftMotor){
+        this.liftMotor = liftMotor;
+
+        this.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
 
     public Lift (DcMotor liftMotor, DigitalChannel liftButtonSensor){
         this.liftMotor = liftMotor;
@@ -38,4 +52,13 @@ public class Lift {
         liftMotor.setPower(Math.abs(power));
     }
 
+    public void moveToPosition(int targetPosition){
+        liftMotor.setTargetPosition(targetPosition);
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftMotor.setPower(AUTONOMOUS_POWER);
+
+        while (liftMotor.isBusy()){
+            //wait for lift motor to move to position
+        }
+    }
 }

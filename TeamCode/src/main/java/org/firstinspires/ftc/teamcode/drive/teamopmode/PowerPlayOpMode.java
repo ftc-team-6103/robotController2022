@@ -54,10 +54,10 @@ public class PowerPlayOpMode extends LinearOpMode {
             drive.update();
 
             if (gamepad2.a){
-                claw.open();
+                claw.close();
             }
             else if (gamepad2.b){
-                claw.close();
+                claw.open();
             }
 
             if (gamepad2.x){
