@@ -11,11 +11,13 @@ public class Lift {
     public static int MIN_LIFT_ROTATE_POSITION = 1000;
 
     public static int LIFT_GROUND_POSITION = -100;
+    public static int LIFT_DRIVE_POSITION = -500;
     public static int LIFT_LOW_TERMINAL = -1000;
-    public static int LIFT_MID_TERMINAL = -2000;
+    public static int LIFT_MID_TERMINAL = -7500;
+    public static int LIFT_MID_TERMINAL_RELEASE = -6000;
     public static int LIFT_HIGH_TERMINAL = -3000;
 
-    private static final double AUTONOMOUS_POWER = 0.5;
+    private static final double AUTONOMOUS_POWER = 1.0;
 
     private DcMotor liftMotor;
     private DigitalChannel liftButtonSensor;

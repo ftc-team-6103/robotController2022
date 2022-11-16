@@ -52,6 +52,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @Autonomous(name="Power Play Autonomous", group="Robot")
+@Disabled
 public class PowerPlayReversePark extends LinearOpMode {
 
     // Declare OpMode members.
