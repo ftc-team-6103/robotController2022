@@ -13,8 +13,9 @@ public class Lift {
     public static int LIFT_GROUND_POSITION = -100;
     public static int LIFT_DRIVE_POSITION = -500;
     public static int LIFT_LOW_TERMINAL = -1000;
-    public static int LIFT_MID_TERMINAL = -7500;
+    public static int LIFT_MID_TERMINAL = -8000;
     public static int LIFT_MID_TERMINAL_RELEASE = -6000;
+    public static int LIFT_CONE_STACK = -1500;
     public static int LIFT_HIGH_TERMINAL = -3000;
 
     private static final double AUTONOMOUS_POWER = 1.0;
