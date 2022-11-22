@@ -84,7 +84,7 @@ public class OriginalSleeveObjectDetection extends LinearOpMode {
      * and paste it in to your code on the next line, between the double quotes.
      */
     private static final String VUFORIA_KEY =
-            " -- YOUR NEW VUFORIA KEY GOES HERE  --- ";
+            "AbZto7//////AAABmXe8TLnlI0uXt5xM9s/AfsQQU604XQ55/gssDzCv6mwTGtVo8f1zJUtlUoecznZRKTNtsho5fZFvqY8zOh08BSe2ivI3KBBUVWfuqG7PXOUib5X4dZ1n+dsgFdNvgHVqdBR7VqOQqSStBmLE3/LB6NWqJxlLtI5Yb485dXuat+oOf+A2t57wGcY5wmvfwKhRbKjdCEJR0vQcViRfVWQ9kBdRo8XXx2c5itH3TdWIDf3vofiJXu5nWfALDMdBjeXIOczEnT8iYSJOvjZF1XbtUWVo+BfBK08tY2ctjo6MBWf3CEtVZb6yQUtDT6RM8NTh2p7h0SyW/sGkN5Et0H+zYbBQU6RM0xM/ilaJYsPhNzmy";
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
