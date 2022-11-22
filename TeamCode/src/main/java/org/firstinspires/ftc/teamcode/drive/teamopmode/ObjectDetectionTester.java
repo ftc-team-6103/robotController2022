@@ -68,7 +68,7 @@ public class ObjectDetectionTester extends LinearOpMode {
 
     private static final String[] LABELS = {
             "Laser",
-            "Lightning Bolt",
+            "Lightning",
             "Master Sword"
     };
 
