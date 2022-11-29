@@ -14,7 +14,7 @@ public class Lift {
     public static int LIFT_DRIVE_POSITION = -500;
     public static int LIFT_LOW_TERMINAL = -1000;
     public static int LIFT_MID_TERMINAL = -8000;
-    public static int LIFT_MID_TERMINAL_RELEASE = -6000;
+    public static int LIFT_MID_TERMINAL_RELEASE = -7000;
     public static int LIFT_CONE_STACK = -1500;
     public static int LIFT_HIGH_TERMINAL = -3000;
 

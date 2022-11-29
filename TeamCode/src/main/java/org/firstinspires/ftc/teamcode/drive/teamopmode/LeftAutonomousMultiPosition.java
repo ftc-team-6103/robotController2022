@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.Arm;
 import org.firstinspires.ftc.teamcode.hardware.Claw;
@@ -15,7 +16,7 @@ import org.firstinspires.ftc.teamcode.hardware.Lift;
 
 @Config
 @Autonomous(group = "drive")
-public class LeftAutonomous extends LinearOpMode {
+public class LeftAutonomousMultiPosition extends TensorFlowOpMode {
 
     private Claw claw;
     private Servo clawServo;
@@ -24,20 +25,31 @@ public class LeftAutonomous extends LinearOpMode {
     private Lift lift;
     private DcMotor liftMotor;
 
+    private TFObjectDetector tfod;
+//    private ImageRecognizer imageRecognizer;
+
     private Pose2d poseHome = new Pose2d(0,0,0);
     private Pose2d poseBackup = new Pose2d(-36.15,0,0);
     private Pose2d poseMediumPole = new Pose2d(-29.29,2.77, -0.6);
-    private Pose2d poseParking = new Pose2d(-29.29, 0, 3.14);
+
+    private Pose2d poseParking1 = new Pose2d(-29.29, -24, 0);
+    private Pose2d poseParking2 = new Pose2d(-29.29, 0, 0);
+    private Pose2d poseParking3 = new Pose2d(-29.29, 24, 0);
+
 
 
     private Trajectory trajectoryHomeToBackUp = null;
     private Trajectory trajectoryBackUpToPole = null;
-    private Trajectory trajectoryPoleToParkingPosition = null;
+    private Trajectory trajectoryPoleToParkingPosition1 = null;
+    private Trajectory trajectoryPoleToParkingPosition2 = null;
+    private Trajectory trajectoryPoleToParkingPosition3 = null;
 
-
+    String randomization = "";
 
     @Override
     public void runOpMode() throws InterruptedException{
+        super.runOpMode();
+
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         clawServo = hardwareMap.get(Servo.class, "claw_servo");
@@ -48,6 +60,11 @@ public class LeftAutonomous extends LinearOpMode {
         lift = new Lift(liftMotor);
 
         waitForStart();
+
+        resetRuntime();
+        while (getRuntime() < 2000) {
+            randomization = detectSignal();
+        }
 
         claw.close();
         sleep(1000);
@@ -67,11 +84,32 @@ public class LeftAutonomous extends LinearOpMode {
     }
 
     private void driveToParkingPosition(SampleMecanumDrive drive){
-        trajectoryPoleToParkingPosition = drive.trajectoryBuilder(poseMediumPole)
-                .lineToLinearHeading(poseParking)
+        trajectoryPoleToParkingPosition1 = drive.trajectoryBuilder(poseMediumPole)
+                .lineToLinearHeading(poseParking1)
+                .build();
+        trajectoryPoleToParkingPosition2 = drive.trajectoryBuilder(poseMediumPole)
+                .lineToLinearHeading(poseParking2)
+                .build();
+        trajectoryPoleToParkingPosition3 = drive.trajectoryBuilder(poseMediumPole)
+                .lineToLinearHeading(poseParking3)
                 .build();
 
-        drive.followTrajectory(trajectoryPoleToParkingPosition);
+        int parking = 3;
+
+        if (randomization != null && randomization.trim().length() > 0){
+            parking = Integer.parseInt(randomization.substring(0,1));
+        }
+
+        if (parking == 1){
+            drive.followTrajectory(trajectoryPoleToParkingPosition1);
+        }
+        else if (parking == 2){
+            drive.followTrajectory(trajectoryPoleToParkingPosition2);
+        }
+        else{
+            drive.followTrajectory(trajectoryPoleToParkingPosition3);
+        }
+
     }
 
     private void driveToPole(SampleMecanumDrive drive, Lift lift){
@@ -87,6 +125,4 @@ public class LeftAutonomous extends LinearOpMode {
         lift.moveToPosition(Lift.LIFT_MID_TERMINAL);
         drive.followTrajectory(trajectoryBackUpToPole);
     }
-
-
 }
