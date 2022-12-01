@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.hardware.Lift;
 
 @Config
 @Autonomous(group = "drive")
-public class RightAutonomous extends LinearOpMode {
+public class RightAutonomous extends TensorFlowOpMode {
 
     private Claw claw;
     private Servo clawServo;
@@ -28,14 +28,18 @@ public class RightAutonomous extends LinearOpMode {
     private Pose2d poseHome = new Pose2d(0,0,0);
     private Pose2d poseBackup = new Pose2d(-33.15,0,0);
     private Pose2d poseMediumPole = new Pose2d(-25.79,-2.77, 0.65);
-    private Pose2d poseParking = new Pose2d(-25.79, 0, 3.14);
 
+    private Pose2d poseParking1 = new Pose2d(-25.79, -24, 0);
+    private Pose2d poseParking2 = new Pose2d(-25.79, 0, 0);
+    private Pose2d poseParking3 = new Pose2d(-25.79, 24, 0);
 
     private Trajectory trajectoryHomeToBackUp = null;
     private Trajectory trajectoryBackUpToPole = null;
-    private Trajectory trajectoryPoleToParkingPosition = null;
+    private Trajectory trajectoryPoleToParkingPosition1 = null;
+    private Trajectory trajectoryPoleToParkingPosition2 = null;
+    private Trajectory trajectoryPoleToParkingPosition3 = null;
 
-
+    private String randomization = "";
 
     @Override
     public void runOpMode() throws InterruptedException{
@@ -48,7 +52,17 @@ public class RightAutonomous extends LinearOpMode {
         liftMotor = hardwareMap.get(DcMotor.class, "lift_motor");
         lift = new Lift(liftMotor);
 
+        initTensorFlow();
+
         waitForStart();
+
+        double start = this.getRuntime();
+
+        while (this.getRuntime() < start + 2){
+            telemetry.addData("runtime", this.getRuntime());
+            telemetry.update();
+            randomization = detectSignal();
+        }
 
         claw.close();
         sleep(1000);
@@ -68,11 +82,31 @@ public class RightAutonomous extends LinearOpMode {
     }
 
     private void driveToParkingPosition(SampleMecanumDrive drive){
-        trajectoryPoleToParkingPosition = drive.trajectoryBuilder(poseMediumPole)
-                .lineToLinearHeading(poseParking)
+        trajectoryPoleToParkingPosition1 = drive.trajectoryBuilder(poseMediumPole)
+                .lineToLinearHeading(poseParking1)
+                .build();
+        trajectoryPoleToParkingPosition2 = drive.trajectoryBuilder(poseMediumPole)
+                .lineToLinearHeading(poseParking2)
+                .build();
+        trajectoryPoleToParkingPosition3 = drive.trajectoryBuilder(poseMediumPole)
+                .lineToLinearHeading(poseParking3)
                 .build();
 
-        drive.followTrajectory(trajectoryPoleToParkingPosition);
+        int parking = 3;
+
+        if (randomization != null && randomization.trim().length() > 0){
+            parking = Integer.parseInt(randomization.substring(0,1));
+        }
+
+        if (parking == 1){
+            drive.followTrajectory(trajectoryPoleToParkingPosition1);
+        }
+        else if (parking == 2){
+            drive.followTrajectory(trajectoryPoleToParkingPosition2);
+        }
+        else{
+            drive.followTrajectory(trajectoryPoleToParkingPosition3);
+        }
     }
 
     private void driveToPole(SampleMecanumDrive drive, Lift lift){
