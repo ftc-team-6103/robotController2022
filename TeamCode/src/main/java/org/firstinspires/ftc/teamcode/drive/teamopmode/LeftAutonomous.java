@@ -77,17 +77,17 @@ public class LeftAutonomous extends TensorFlowOpMode {
 
         claw.close();
         sleep(1000);
-        lift.moveToPosition(Lift.LIFT_DRIVE_POSITION);
+        lift.adjustUp();
         sleep(1000);
         driveToPole(drive, lift);
         sleep(1000);
         arm.rotateRear();
         sleep(2000);
-        lift.moveToPosition(Lift.LIFT_MID_TERMINAL_RELEASE);
+        lift.adjustDown();
         claw.open();
         sleep(1000);
         arm.rotateForward();
-        lift.moveToPosition(Lift.LIFT_DRIVE_POSITION);
+        lift.moveToPosition(Lift.POSITION_GROUND);
         driveToParkingPosition(drive);
 
     }
@@ -131,7 +131,7 @@ public class LeftAutonomous extends TensorFlowOpMode {
                 .build();
 
         drive.followTrajectory(trajectoryHomeToBackUp);
-        lift.moveToPosition(Lift.LIFT_MID_TERMINAL);
+        lift.moveToPosition(Lift.POSITION_MID_TERMINAL);
         drive.followTrajectory(trajectoryBackUpToPole);
     }
 }

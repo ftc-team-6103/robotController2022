@@ -4,24 +4,24 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 
+import org.checkerframework.checker.units.qual.A;
+
 public class Lift {
 
-    public static int MAX_LIFT_MOTOR_POSITION = 12000;
-    public static int MIN_LIFT_MOTOR_POSITION = 0;
-    public static int MIN_LIFT_ROTATE_POSITION = 1000;
+    public static int LIFT_CONE_STACK = -300;
 
-    public static int LIFT_GROUND_POSITION = -100;
-    public static int LIFT_DRIVE_POSITION = -500;
-    public static int LIFT_LOW_TERMINAL = -1000;
-    public static int LIFT_MID_TERMINAL = -8000;
-    public static int LIFT_MID_TERMINAL_RELEASE = -7000;
-    public static int LIFT_CONE_STACK = -1500;
-    public static int LIFT_HIGH_TERMINAL = -3000;
+    public static int POSITION_GROUND = 0;
+    public static int POSITION_LOW_TERMINAL = -1000;
+    public static int POSITION_MID_TERMINAL = -2000;
+    public static int POSITION_HIGH_TERMINAL = -3000;
+
+    private static final int ADJUSTMENT = 200;
 
     private static final double AUTONOMOUS_POWER = 1.0;
 
     private DcMotor liftMotor;
     private DigitalChannel liftButtonSensor;
+    private int currentPosition = POSITION_GROUND;
 
     public Lift (DcMotor liftMotor){
         this.liftMotor = liftMotor;
@@ -33,6 +33,7 @@ public class Lift {
     public Lift (DcMotor liftMotor, DigitalChannel liftButtonSensor){
         this.liftMotor = liftMotor;
         this.liftButtonSensor = liftButtonSensor;
+        this.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
@@ -62,6 +63,86 @@ public class Lift {
 
         while (liftMotor.isBusy()){
             //wait for lift motor to move to position
+        }
+    }
+
+    public void togglePositionUp(){
+        if (currentPosition == POSITION_GROUND){
+            currentPosition = POSITION_LOW_TERMINAL;
+        }
+        else if (currentPosition == POSITION_LOW_TERMINAL){
+            currentPosition = POSITION_MID_TERMINAL;
+        }
+        else{
+            currentPosition = POSITION_HIGH_TERMINAL;
+        }
+
+        moveToPositionAsync(currentPosition);
+    }
+
+    public void togglePositionDown(){
+        if (currentPosition == POSITION_HIGH_TERMINAL){
+            currentPosition = POSITION_MID_TERMINAL;
+        }
+        else if (currentPosition == POSITION_MID_TERMINAL){
+            currentPosition = POSITION_LOW_TERMINAL;
+        }
+        else{
+            currentPosition = POSITION_GROUND;
+        }
+
+        moveToPositionAsync(currentPosition);
+    }
+
+    /**
+     * Make Fine Tune Movement Down by ADJUSTMENT amount
+     */
+    public void adjustDown(){
+        int encoderValue = liftMotor.getCurrentPosition();
+        if (currentPosition != POSITION_GROUND && encoderValue + ADJUSTMENT < POSITION_GROUND){
+            moveToPositionAsync(encoderValue + ADJUSTMENT, 0.25);
+        }
+    }
+
+    /**
+     * Make Fine Tune Movement Up by ADJUSTMENT amount
+     */
+    public void adjustUp(){
+        int encoderValue = liftMotor.getCurrentPosition();
+        if (currentPosition != POSITION_HIGH_TERMINAL && encoderValue - ADJUSTMENT > POSITION_HIGH_TERMINAL){
+            moveToPositionAsync(encoderValue - ADJUSTMENT, 0.25);
+        }
+    }
+
+    private void calibrateGround(){
+        lower(0.1);
+        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    public void moveToPositionAsync(int targetPosition){
+        liftMotor.setTargetPosition(targetPosition);
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftMotor.setPower(AUTONOMOUS_POWER);
+    }
+
+    private void moveToPositionAsync(int targetPosition, double power){
+        liftMotor.setTargetPosition(targetPosition);
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftMotor.setPower(power);
+    }
+
+    public String getCurrentPosition(){
+        if (currentPosition == POSITION_GROUND){
+            return "GROUND " + currentPosition;
+        }
+        else if (currentPosition == POSITION_LOW_TERMINAL){
+            return "LOW TERMINAL " + currentPosition;
+        }
+        else if (currentPosition == POSITION_MID_TERMINAL){
+            return "MID TERMINAL " + currentPosition;
+        }
+        else{
+            return "HIGH TERMINAL " + currentPosition;
         }
     }
 }

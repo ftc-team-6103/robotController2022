@@ -54,7 +54,7 @@ public class LeftAutonomousTest extends LinearOpMode {
 
         claw.close();
         sleep(500);
-        lift.moveToPosition(Lift.LIFT_DRIVE_POSITION);
+        lift.adjustUp();
         sleep(500);
 
         trajectoryHomeToBackUp = drive.trajectoryBuilder(poseHome)
@@ -63,7 +63,7 @@ public class LeftAutonomousTest extends LinearOpMode {
 
         drive.followTrajectory(trajectoryHomeToBackUp);
 
-        lift.moveToPosition(Lift.LIFT_MID_TERMINAL);
+        lift.moveToPosition(Lift.POSITION_MID_TERMINAL);
 
         trajectoryBackUpToPole = drive.trajectoryBuilder(poseBackup)
                 .lineToLinearHeading(poseMediumPole)
@@ -73,11 +73,11 @@ public class LeftAutonomousTest extends LinearOpMode {
 
         sleep(500);
 
-        lift.moveToPosition(Lift.LIFT_MID_TERMINAL);
+        lift.moveToPosition(Lift.POSITION_MID_TERMINAL);
 
         sleep(500);
 
-        lift.moveToPosition(Lift.LIFT_MID_TERMINAL_RELEASE);
+        lift.adjustDown();
 
         claw.open();
 
@@ -99,7 +99,7 @@ public class LeftAutonomousTest extends LinearOpMode {
 
         sleep(500);
 
-        lift.moveToPosition(Lift.LIFT_MID_TERMINAL);
+        lift.moveToPosition(Lift.POSITION_MID_TERMINAL);
 
         arm.rotateForward();
 
@@ -112,17 +112,7 @@ public class LeftAutonomousTest extends LinearOpMode {
         drive.followTrajectory(trajectoryConeStackToPole2);
 
         sleep(500);
-        lift.moveToPosition(Lift.LIFT_MID_TERMINAL_RELEASE);
+        lift.adjustDown();
         claw.open();
     }
-
-    private void driveToPole(SampleMecanumDrive drive, Lift lift){
-
-
-
-        drive.followTrajectory(trajectoryHomeToBackUp);
-
-        drive.followTrajectory(trajectoryBackUpToPole);
-    }
-
 }
