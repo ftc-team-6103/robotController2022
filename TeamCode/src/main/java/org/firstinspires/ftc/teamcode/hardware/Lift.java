@@ -11,9 +11,9 @@ public class Lift {
     public static int LIFT_CONE_STACK = -300;
 
     public static int POSITION_GROUND = 0;
-    public static int POSITION_LOW_TERMINAL = -1000;
-    public static int POSITION_MID_TERMINAL = -2000;
-    public static int POSITION_HIGH_TERMINAL = -3000;
+    public static int POSITION_LOW_TERMINAL = -1800;
+    public static int POSITION_MID_TERMINAL = -3000;
+    public static int POSITION_HIGH_TERMINAL = -4200;
 
     private static final int ADJUSTMENT = 200;
 
@@ -97,20 +97,42 @@ public class Lift {
     /**
      * Make Fine Tune Movement Down by ADJUSTMENT amount
      */
-    public void adjustDown(){
+    public void adjustDownAsync(){
         int encoderValue = liftMotor.getCurrentPosition();
         if (currentPosition != POSITION_GROUND && encoderValue + ADJUSTMENT < POSITION_GROUND){
             moveToPositionAsync(encoderValue + ADJUSTMENT, 0.25);
         }
     }
 
+    public void adjustDown(){
+        int encoderValue = liftMotor.getCurrentPosition();
+        if (currentPosition != POSITION_GROUND && encoderValue + ADJUSTMENT < POSITION_GROUND){
+            moveToPositionAsync(encoderValue + ADJUSTMENT, 0.25);
+        }
+
+        while (liftMotor.isBusy()){
+            //wait for lift motor to move to position
+        }
+    }
+
     /**
      * Make Fine Tune Movement Up by ADJUSTMENT amount
      */
+    public void adjustUpAsync(){
+        int encoderValue = liftMotor.getCurrentPosition();
+        if (currentPosition != POSITION_HIGH_TERMINAL && encoderValue - ADJUSTMENT > POSITION_HIGH_TERMINAL){
+            moveToPositionAsync(encoderValue - ADJUSTMENT, 0.25);
+        }
+    }
+
     public void adjustUp(){
         int encoderValue = liftMotor.getCurrentPosition();
         if (currentPosition != POSITION_HIGH_TERMINAL && encoderValue - ADJUSTMENT > POSITION_HIGH_TERMINAL){
             moveToPositionAsync(encoderValue - ADJUSTMENT, 0.25);
+        }
+
+        while (liftMotor.isBusy()){
+            //wait for lift motor to move to position
         }
     }
 

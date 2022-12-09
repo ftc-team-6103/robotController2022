@@ -68,10 +68,6 @@ public class PowerPlayOpMode extends LinearOpMode {
                 arm.rotateRear();
             }
 
-            if (gamepad2.right_bumper){
-                lift.moveToPosition(-2000);
-            }
-
             if (gamepad2.dpad_up && canToggle()){
                 lift.togglePositionUp();
             }
@@ -80,6 +76,14 @@ public class PowerPlayOpMode extends LinearOpMode {
                 if (!liftButtonSensor.getState()){
                     liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 }
+            }
+
+            if (gamepad2.left_trigger > 0.25 && canToggle()){
+                lift.adjustDownAsync();
+            }
+
+            if (gamepad2.left_bumper && canToggle()){
+                lift.adjustUpAsync();
             }
 
             calibrateGround();

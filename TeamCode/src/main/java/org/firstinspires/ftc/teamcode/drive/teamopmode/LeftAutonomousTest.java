@@ -54,7 +54,7 @@ public class LeftAutonomousTest extends LinearOpMode {
 
         claw.close();
         sleep(500);
-        lift.adjustUp();
+        lift.adjustUpAsync();
         sleep(500);
 
         trajectoryHomeToBackUp = drive.trajectoryBuilder(poseHome)
@@ -77,7 +77,7 @@ public class LeftAutonomousTest extends LinearOpMode {
 
         sleep(500);
 
-        lift.adjustDown();
+        lift.adjustDownAsync();
 
         claw.open();
 
@@ -112,7 +112,7 @@ public class LeftAutonomousTest extends LinearOpMode {
         drive.followTrajectory(trajectoryConeStackToPole2);
 
         sleep(500);
-        lift.adjustDown();
+        lift.adjustDownAsync();
         claw.open();
     }
 }

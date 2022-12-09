@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -32,9 +31,9 @@ public class LeftAutonomous extends TensorFlowOpMode {
     private Pose2d poseBackup = new Pose2d(-36.15,0,0);
     private Pose2d poseMediumPole = new Pose2d(-29.29,2.77, -0.8);
 
-    private Pose2d poseParking1 = new Pose2d(-29.29, -24, 0);
+    private Pose2d poseParking1 = new Pose2d(-31.29, -26, 0);
     private Pose2d poseParking2 = new Pose2d(-29.29, 0, 0);
-    private Pose2d poseParking3 = new Pose2d(-29.29, 24, 0);
+    private Pose2d poseParking3 = new Pose2d(-29.29, 26, 0);
 
 
 
@@ -70,7 +69,6 @@ public class LeftAutonomous extends TensorFlowOpMode {
             randomization = detectSignal();
         }
 
-
         telemetry.addData("randomization", "detected: " + randomization);
         telemetry.update();
 
@@ -78,18 +76,32 @@ public class LeftAutonomous extends TensorFlowOpMode {
         claw.close();
         sleep(1000);
         lift.adjustUp();
-        sleep(1000);
-        driveToPole(drive, lift);
+
+        trajectoryHomeToBackUp = drive.trajectoryBuilder(poseHome)
+                .lineToLinearHeading(poseBackup)
+                .build();
+
+        drive.followTrajectory(trajectoryHomeToBackUp);
+
+        lift.moveToPosition(Lift.POSITION_MID_TERMINAL);
+
+        trajectoryBackUpToPole = drive.trajectoryBuilder(poseBackup)
+                .lineToLinearHeading(poseMediumPole)
+                .build();
+
+        drive.followTrajectory(trajectoryBackUpToPole);
+
         sleep(1000);
         arm.rotateRear();
         sleep(2000);
-        lift.adjustDown();
+        lift.moveToPosition(Lift.POSITION_MID_TERMINAL + 350);
+        sleep(1000);
         claw.open();
         sleep(1000);
         arm.rotateForward();
-        lift.moveToPosition(Lift.POSITION_GROUND);
+        sleep(1000);
         driveToParkingPosition(drive);
-
+        lift.moveToPosition(Lift.POSITION_GROUND);
     }
 
     private void driveToParkingPosition(SampleMecanumDrive drive){
@@ -119,19 +131,5 @@ public class LeftAutonomous extends TensorFlowOpMode {
             drive.followTrajectory(trajectoryPoleToParkingPosition3);
         }
 
-    }
-
-    private void driveToPole(SampleMecanumDrive drive, Lift lift){
-        trajectoryHomeToBackUp = drive.trajectoryBuilder(poseHome)
-                .lineToLinearHeading(poseBackup)
-                .build();
-
-        trajectoryBackUpToPole = drive.trajectoryBuilder(poseBackup)
-                .lineToLinearHeading(poseMediumPole)
-                .build();
-
-        drive.followTrajectory(trajectoryHomeToBackUp);
-        lift.moveToPosition(Lift.POSITION_MID_TERMINAL);
-        drive.followTrajectory(trajectoryBackUpToPole);
     }
 }
