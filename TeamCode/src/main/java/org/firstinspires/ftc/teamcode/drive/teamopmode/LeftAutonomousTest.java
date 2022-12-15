@@ -31,8 +31,6 @@ public class LeftAutonomousTest extends LinearOpMode {
     private Pose2d poseMediumPole = new Pose2d(-43,5, 0.93);
     private Pose2d poseMediumPole2 = new Pose2d(-43,4, 0.93);
     private Pose2d poseConeStack = new Pose2d(-48, -19, 1.6);
-//    private Pose2d poseParking = new Pose2d(-29.29, 0, 3.14);
-
 
     private Trajectory trajectoryHomeToBackUp = null;
     private Trajectory trajectoryBackUpToPole = null;
