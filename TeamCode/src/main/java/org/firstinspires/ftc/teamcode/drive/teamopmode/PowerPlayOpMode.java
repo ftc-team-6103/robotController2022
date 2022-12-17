@@ -23,9 +23,9 @@ public class PowerPlayOpMode extends LinearOpMode {
     private DigitalChannel liftButtonSensor;
     private long toggleTimer = System.currentTimeMillis();
 
-    private static final double THROTTLE = 0.5;
-    private static final double STRAFE_THROTTLE = 0.5;
-    private static final double ROTATION_THROTTLE = 0.5;
+    private static final double THROTTLE = 0.4;
+    private static final double STRAFE_THROTTLE = 0.4;
+    private static final double ROTATION_THROTTLE = 0.4;
 
     @Override
     public void runOpMode() throws InterruptedException{
@@ -86,7 +86,11 @@ public class PowerPlayOpMode extends LinearOpMode {
                 lift.adjustUpAsync();
             }
 
-            calibrateGround();
+            if (gamepad2.right_trigger > 0.5 && canToggle()){
+                calibrateGroundManual();
+            }
+
+//            calibrateGround();
 
             telemetry.addData("Lift Motor Position: ", liftMotor.getCurrentPosition());
             telemetry.addData("Lift Position: ", lift.getCurrentPosition());
@@ -115,11 +119,28 @@ public class PowerPlayOpMode extends LinearOpMode {
      * manually lower it until the button sensor is pressed and then reset encoder
      */
     private void calibrateGround(){
+//        if (liftButtonSensor.getState() && lift.getCurrentPosition().equals("GROUND 0") && Math.abs(liftMotor.getCurrentPosition()) <= 5){
+//            liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            long start = System.currentTimeMillis();
+//            long current = start;
+//            while (liftButtonSensor.getState() && current - start < 250){
+//                current = System.currentTimeMillis();
+//                lift.lower(0.2);
+//            }
+//            liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        }
+    }
+
+    /**
+     * If the button sensor is not pressed and the arm thinks it's all the way lower,
+     * manually lower it until the button sensor is pressed and then reset encoder
+     */
+    private void calibrateGroundManual(){
         if (liftButtonSensor.getState() && lift.getCurrentPosition().equals("GROUND 0") && Math.abs(liftMotor.getCurrentPosition()) <= 5){
             liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             long start = System.currentTimeMillis();
             long current = start;
-            while (liftButtonSensor.getState() && current - start < 250){
+            while (liftButtonSensor.getState() && current - start < 500){
                 current = System.currentTimeMillis();
                 lift.lower(0.2);
             }

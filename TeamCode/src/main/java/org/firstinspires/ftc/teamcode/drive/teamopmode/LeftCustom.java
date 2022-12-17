@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.drive.teamopmode;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -13,6 +15,29 @@ import org.firstinspires.ftc.teamcode.hardware.Lift;
 @Config
 @Autonomous(group = "drive")
 public class LeftCustom extends Left {
+
+    private Claw claw;
+    private Servo clawServo;
+    private Arm arm;
+    private Servo armServo;
+    private Lift lift;
+    private DcMotor liftMotor;
+
+    private Pose2d poseHome = new Pose2d(0,0,0);
+    private Pose2d poseBackup = new Pose2d(-36.15,0,0);
+    private Pose2d poseMediumPole = new Pose2d(-29.29,2.77, -0.8);
+
+    private Pose2d poseParking1 = new Pose2d(-31.29, -26, 0);
+    private Pose2d poseParking2 = new Pose2d(-29.29, 0, 0);
+    private Pose2d poseParking3 = new Pose2d(-29.29, 26, 0);
+
+    private Trajectory trajectoryHomeToBackUp = null;
+    private Trajectory trajectoryBackUpToPole = null;
+    private Trajectory trajectoryPoleToParkingPosition1 = null;
+    private Trajectory trajectoryPoleToParkingPosition2 = null;
+    private Trajectory trajectoryPoleToParkingPosition3 = null;
+
+    private String randomization = "";
 
     @Override
     public void runOpMode() throws InterruptedException{

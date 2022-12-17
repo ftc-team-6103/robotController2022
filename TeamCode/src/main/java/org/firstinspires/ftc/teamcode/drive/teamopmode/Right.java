@@ -16,26 +16,26 @@ import org.firstinspires.ftc.teamcode.hardware.Lift;
 @Autonomous(group = "drive")
 public class Right extends TensorFlowOpMode {
 
-    protected Claw claw;
-    protected Servo clawServo;
-    protected Arm arm;
-    protected Servo armServo;
-    protected Lift lift;
-    protected DcMotor liftMotor;
+    private Claw claw;
+    private Servo clawServo;
+    private Arm arm;
+    private Servo armServo;
+    private Lift lift;
+    private DcMotor liftMotor;
 
-    protected Pose2d poseHome = new Pose2d(0,0,0);
-    protected Pose2d poseBackup = new Pose2d(-33.15,0,0);
-    protected Pose2d poseMediumPole = new Pose2d(-25.79,-2.77, 0.65);
+    private Pose2d poseHome = new Pose2d(0,0,0);
+    private Pose2d poseBackup = new Pose2d(-33.15,0,0);
+    private Pose2d poseMediumPole = new Pose2d(-25.79,-2.77, 0.65);
 
-    protected Pose2d poseParking1 = new Pose2d(-25.79, -24, 0);
-    protected Pose2d poseParking2 = new Pose2d(-25.79, 0, 0);
-    protected Pose2d poseParking3 = new Pose2d(-25.79, 24, 0);
+    private Pose2d poseParking1 = new Pose2d(-25.79, -24, 0);
+    private Pose2d poseParking2 = new Pose2d(-25.79, 0, 0);
+    private Pose2d poseParking3 = new Pose2d(-25.79, 24, 0);
 
-    protected Trajectory trajectoryHomeToBackUp = null;
-    protected Trajectory trajectoryBackUpToPole = null;
-    protected Trajectory trajectoryPoleToParkingPosition1 = null;
-    protected Trajectory trajectoryPoleToParkingPosition2 = null;
-    protected Trajectory trajectoryPoleToParkingPosition3 = null;
+    private Trajectory trajectoryHomeToBackUp = null;
+    private Trajectory trajectoryBackUpToPole = null;
+    private Trajectory trajectoryPoleToParkingPosition1 = null;
+    private Trajectory trajectoryPoleToParkingPosition2 = null;
+    private Trajectory trajectoryPoleToParkingPosition3 = null;
 
     protected String randomization = "";
 
