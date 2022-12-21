@@ -21,10 +21,11 @@ public class PowerPlayOpMode extends LinearOpMode {
     private Lift lift;
     private DcMotor liftMotor;
     private DigitalChannel liftButtonSensor;
+    private long toggleTimer = System.currentTimeMillis();
 
-    private static final double THROTTLE = 0.5;
-    private static final double STRAFE_THROTTLE = 0.5;
-    private static final double ROTATION_THROTTLE = 0.5;
+    private static final double THROTTLE = 0.4;
+    private static final double STRAFE_THROTTLE = 0.4;
+    private static final double ROTATION_THROTTLE = 0.4;
 
     @Override
     public void runOpMode() throws InterruptedException{
@@ -67,22 +68,83 @@ public class PowerPlayOpMode extends LinearOpMode {
                 arm.rotateRear();
             }
 
-            if(gamepad2.right_stick_y < 0){
-                lift.raise(gamepad2.right_stick_y);
+            if (gamepad2.dpad_up && canToggle()){
+                lift.togglePositionUp();
             }
-            else if (gamepad2.right_stick_y > 0){
-                lift.lower(gamepad2.right_stick_y);
-            }
-            else{
-                lift.stop();
+            else if (gamepad2.dpad_down && canToggle()){
+                lift.togglePositionDown();
+                if (!liftButtonSensor.getState()){
+                    liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                }
             }
 
-            telemetry.addData("Right Stick Y: ", gamepad2.right_stick_y);
+            if (gamepad2.left_trigger > 0.25 && canToggle()){
+                lift.adjustDownAsync();
+            }
+
+            if (gamepad2.left_bumper && canToggle()){
+                lift.adjustUpAsync();
+            }
+
+            if (gamepad2.right_trigger > 0.5 && canToggle()){
+                calibrateGroundManual();
+            }
+
+//            calibrateGround();
+
             telemetry.addData("Lift Motor Position: ", liftMotor.getCurrentPosition());
+            telemetry.addData("Lift Position: ", lift.getCurrentPosition());
             telemetry.addData("Lift Button Sensor: ", liftButtonSensor.getState());
-            telemetry.addData("Throttle Values: " , THROTTLE + "-" + STRAFE_THROTTLE + "-" + ROTATION_THROTTLE);
             telemetry.update();
         }
 
+    }
+
+    /**
+     * Ensure a minimum amount of time between consecutive button presses
+     */
+    private boolean canToggle(){
+        long time = System.currentTimeMillis();
+
+        if (time - toggleTimer > 250){
+            toggleTimer = time;
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * If the button sensor is not pressed and the arm thinks it's all the way lower,
+     * manually lower it until the button sensor is pressed and then reset encoder
+     */
+    private void calibrateGround(){
+//        if (liftButtonSensor.getState() && lift.getCurrentPosition().equals("GROUND 0") && Math.abs(liftMotor.getCurrentPosition()) <= 5){
+//            liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            long start = System.currentTimeMillis();
+//            long current = start;
+//            while (liftButtonSensor.getState() && current - start < 250){
+//                current = System.currentTimeMillis();
+//                lift.lower(0.2);
+//            }
+//            liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        }
+    }
+
+    /**
+     * If the button sensor is not pressed and the arm thinks it's all the way lower,
+     * manually lower it until the button sensor is pressed and then reset encoder
+     */
+    private void calibrateGroundManual(){
+        if (liftButtonSensor.getState() && lift.getCurrentPosition().equals("GROUND 0") && Math.abs(liftMotor.getCurrentPosition()) <= 5){
+            liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            long start = System.currentTimeMillis();
+            long current = start;
+            while (liftButtonSensor.getState() && current - start < 500){
+                current = System.currentTimeMillis();
+                lift.lower(0.2);
+            }
+            liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
     }
 }

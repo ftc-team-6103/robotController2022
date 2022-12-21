@@ -43,8 +43,15 @@ import java.util.List;
 public class TensorFlowOpMode extends LinearOpMode {
 
     private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
+    private static final String CUSTOM_TFOD_MODEL_ASSET = "6103powerplay.tflite";
 
     private static final String[] LABELS = {"1 Bolt","2 Bulb","3 Panel"};
+    private static final String[] CUSTOM_LABELS = {
+            "glowstick",
+            "l",
+            "lightning",
+            "sword"
+    };
 
     private static final String VUFORIA_KEY =
             "AbZto7//////AAABmXe8TLnlI0uXt5xM9s/AfsQQU604XQ55/gssDzCv6mwTGtVo8f1zJUtlUoecznZRKTNtsho5fZFvqY8zOh08BSe2ivI3KBBUVWfuqG7PXOUib5X4dZ1n+dsgFdNvgHVqdBR7VqOQqSStBmLE3/LB6NWqJxlLtI5Yb485dXuat+oOf+A2t57wGcY5wmvfwKhRbKjdCEJR0vQcViRfVWQ9kBdRo8XXx2c5itH3TdWIDf3vofiJXu5nWfALDMdBjeXIOczEnT8iYSJOvjZF1XbtUWVo+BfBK08tY2ctjo6MBWf3CEtVZb6yQUtDT6RM8NTh2p7h0SyW/sGkN5Et0H+zYbBQU6RM0xM/ilaJYsPhNzmy";
@@ -66,6 +73,19 @@ public class TensorFlowOpMode extends LinearOpMode {
         if (tfod != null) {
             tfod.activate();
             tfod.setZoom(1.0, 16.0/9.0);
+        }
+
+        telemetry.addData(">", "Press Play to start op mode");
+        telemetry.update();
+    }
+
+    protected void initCustomTensorFlow(){
+        initVuforia();
+        initCustomTfod();
+
+        if (tfod != null) {
+            tfod.activate();
+            tfod.setZoom(1.8, 16.0/13.0);
         }
 
         telemetry.addData(">", "Press Play to start op mode");
@@ -111,11 +131,30 @@ public class TensorFlowOpMode extends LinearOpMode {
         tfodParameters.minResultConfidence = 0.75f;
         tfodParameters.isModelTensorFlow2 = true;
         tfodParameters.inputSize = 300;
+
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 
         // Use loadModelFromAsset() if the TF Model is built in as an asset by Android Studio
         // Use loadModelFromFile() if you have downloaded a custom team model to the Robot Controller's FLASH.
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+        // tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
+    }
+
+    private void initCustomTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minResultConfidence = 0.7f;
+        tfodParameters.trackerMarginalCorrelation = 0.8f;
+        tfodParameters.isModelTensorFlow2 = true;
+        tfodParameters.trackerMinSize = 60.0f;
+        tfodParameters.inputSize = 1280;
+
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+
+        // Use loadModelFromAsset() if the TF Model is built in as an asset by Android Studio
+        // Use loadModelFromFile() if you have downloaded a custom team model to the Robot Controller's FLASH.
+        tfod.loadModelFromAsset(CUSTOM_TFOD_MODEL_ASSET, CUSTOM_LABELS);
         // tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
     }
 }

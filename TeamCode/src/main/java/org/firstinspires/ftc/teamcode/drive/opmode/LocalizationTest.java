@@ -18,9 +18,15 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 @TeleOp(group = "drive")
 @Disabled
 public class LocalizationTest extends LinearOpMode {
+
+    private DcMotor liftMotor;
+
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+
+        liftMotor = hardwareMap.get(DcMotor.class, "lift_motor");
+//        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -41,6 +47,7 @@ public class LocalizationTest extends LinearOpMode {
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
+            telemetry.addData("lift_motor", liftMotor.getCurrentPosition());
             telemetry.update();
         }
     }
