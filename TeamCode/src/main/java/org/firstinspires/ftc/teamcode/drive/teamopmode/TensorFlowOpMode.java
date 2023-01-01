@@ -84,7 +84,7 @@ public class TensorFlowOpMode extends LinearOpMode {
 
         if (tfod != null) {
             tfod.activate();
-            tfod.setZoom(1.8, 16.0/13.0);
+            tfod.setZoom(1.0, 16.0/9.0);
         }
 
         telemetry.addData(">", "Press Play to start op mode");
@@ -127,9 +127,9 @@ public class TensorFlowOpMode extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.75f;
+        tfodParameters.minResultConfidence = 0.9f;
         tfodParameters.isModelTensorFlow2 = true;
-        tfodParameters.inputSize = 300;
+        //tfodParameters.inputSize = 300;
 
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 
@@ -144,7 +144,7 @@ public class TensorFlowOpMode extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.8f;
+        tfodParameters.minResultConfidence = 0.9f;
         tfodParameters.isModelTensorFlow2 = true;
 
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
