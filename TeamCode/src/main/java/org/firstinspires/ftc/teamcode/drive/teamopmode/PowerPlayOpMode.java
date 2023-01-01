@@ -37,7 +37,7 @@ public class PowerPlayOpMode extends LinearOpMode {
         arm = new Arm(armServo);
         liftMotor = hardwareMap.get(DcMotor.class, "lift_motor");
         liftButtonSensor = hardwareMap.get(DigitalChannel.class, "lift_button_sensor");
-        lift = new Lift(liftMotor, liftButtonSensor);
+        lift = new Lift(liftMotor, liftButtonSensor, false);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -68,83 +68,20 @@ public class PowerPlayOpMode extends LinearOpMode {
                 arm.rotateRear();
             }
 
-            if (gamepad2.dpad_up && canToggle()){
-                lift.togglePositionUp();
+            if(gamepad2.left_stick_y < 0){
+                lift.raise(gamepad2.left_stick_y);
             }
-            else if (gamepad2.dpad_down && canToggle()){
-                lift.togglePositionDown();
-                if (!liftButtonSensor.getState()){
-                    liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                }
+            else if (gamepad2.left_stick_y > 0){
+                lift.lower(gamepad2.left_stick_y);
             }
-
-            if (gamepad2.left_trigger > 0.25 && canToggle()){
-                lift.adjustDownAsync();
+            else{
+                lift.stop();
             }
-
-            if (gamepad2.left_bumper && canToggle()){
-                lift.adjustUpAsync();
-            }
-
-            if (gamepad2.right_trigger > 0.5 && canToggle()){
-                calibrateGroundManual();
-            }
-
-//            calibrateGround();
 
             telemetry.addData("Lift Motor Position: ", liftMotor.getCurrentPosition());
             telemetry.addData("Lift Position: ", lift.getCurrentPosition());
             telemetry.addData("Lift Button Sensor: ", liftButtonSensor.getState());
             telemetry.update();
-        }
-
-    }
-
-    /**
-     * Ensure a minimum amount of time between consecutive button presses
-     */
-    private boolean canToggle(){
-        long time = System.currentTimeMillis();
-
-        if (time - toggleTimer > 250){
-            toggleTimer = time;
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * If the button sensor is not pressed and the arm thinks it's all the way lower,
-     * manually lower it until the button sensor is pressed and then reset encoder
-     */
-    private void calibrateGround(){
-//        if (liftButtonSensor.getState() && lift.getCurrentPosition().equals("GROUND 0") && Math.abs(liftMotor.getCurrentPosition()) <= 5){
-//            liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//            long start = System.currentTimeMillis();
-//            long current = start;
-//            while (liftButtonSensor.getState() && current - start < 250){
-//                current = System.currentTimeMillis();
-//                lift.lower(0.2);
-//            }
-//            liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        }
-    }
-
-    /**
-     * If the button sensor is not pressed and the arm thinks it's all the way lower,
-     * manually lower it until the button sensor is pressed and then reset encoder
-     */
-    private void calibrateGroundManual(){
-        if (liftButtonSensor.getState() && lift.getCurrentPosition().equals("GROUND 0") && Math.abs(liftMotor.getCurrentPosition()) <= 5){
-            liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            long start = System.currentTimeMillis();
-            long current = start;
-            while (liftButtonSensor.getState() && current - start < 500){
-                current = System.currentTimeMillis();
-                lift.lower(0.2);
-            }
-            liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
     }
 }

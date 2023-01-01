@@ -37,6 +37,15 @@ public class Lift {
         this.liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
+    public Lift (DcMotor liftMotor, DigitalChannel liftButtonSensor, boolean encoderBased){
+        this.liftMotor = liftMotor;
+        this.liftButtonSensor = liftButtonSensor;
+        if (encoderBased){
+            this.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+        this.liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
     public void stop(){
         liftMotor.setPower(0);
     }
