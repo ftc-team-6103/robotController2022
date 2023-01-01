@@ -106,14 +106,14 @@ public class RightCustom extends Right {
                 .lineToLinearHeading(poseParking3)
                 .build();
 
-        if (randomization.equals("lightning")){
+        if (randomization.equals("Lightning")){
             drive.followTrajectory(trajectoryPoleToParkingPosition2);
         }
-        else if (randomization.equals("sword")){
-            drive.followTrajectory(trajectoryPoleToParkingPosition3);
+        else if (randomization.equals("Laser")){
+            drive.followTrajectory(trajectoryPoleToParkingPosition1);
         }
         else{
-            drive.followTrajectory(trajectoryPoleToParkingPosition1);
+            drive.followTrajectory(trajectoryPoleToParkingPosition3);
         }
     }
 }

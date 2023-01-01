@@ -43,14 +43,13 @@ import java.util.List;
 public class TensorFlowOpMode extends LinearOpMode {
 
     private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
-    private static final String CUSTOM_TFOD_MODEL_ASSET = "6103powerplay.tflite";
+    private static final String CUSTOM_TFOD_MODEL_ASSET = "Use Me.tflite";
 
     private static final String[] LABELS = {"1 Bolt","2 Bulb","3 Panel"};
     private static final String[] CUSTOM_LABELS = {
-            "glowstick",
-            "l",
-            "lightning",
-            "sword"
+            "Lightning",
+            "Master_Sword",
+            "Laser"
     };
 
     private static final String VUFORIA_KEY =
@@ -136,7 +135,8 @@ public class TensorFlowOpMode extends LinearOpMode {
 
         // Use loadModelFromAsset() if the TF Model is built in as an asset by Android Studio
         // Use loadModelFromFile() if you have downloaded a custom team model to the Robot Controller's FLASH.
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+        //tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+        tfod.loadModelFromAsset(CUSTOM_TFOD_MODEL_ASSET, CUSTOM_LABELS);
         // tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
     }
 
