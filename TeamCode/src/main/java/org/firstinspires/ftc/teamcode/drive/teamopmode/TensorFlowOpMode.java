@@ -84,7 +84,7 @@ public class TensorFlowOpMode extends LinearOpMode {
 
         if (tfod != null) {
             tfod.activate();
-            tfod.setZoom(1.8, 16.0/13.0);
+            tfod.setZoom(1.0, 16.0/9.0);
         }
 
         telemetry.addData(">", "Press Play to start op mode");
