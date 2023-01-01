@@ -62,16 +62,13 @@ public class ObjectDetectionTester extends LinearOpMode {
      * has been downloaded to the Robot Controller's SD FLASH memory, it must to be loaded using loadModelFromFile()
      * Here we assume it's an Asset.    Also see method initTfod() below .
      */
-//    private static final String TFOD_MODEL_ASSET = "PowerPlay Custom.tflite";
-    private static final String TFOD_MODEL_ASSET = "6103powerplay.tflite";
-    // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
+    private static final String TFOD_MODEL_ASSET = "Use Me.tflite";
 
 
     private static final String[] LABELS = {
-            "glowstick",
-            "l",
-            "lightning",
-            "sword"
+            "Lightning",
+            "Master_Sword",
+            "Laser"
     };
 
     /*
@@ -181,16 +178,12 @@ public class ObjectDetectionTester extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
             "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.3f;
-//        tfodParameters.trackerMarginalCorrelation = 0.8f;
-//        tfodParameters.isModelTensorFlow2 = true;
-//        tfodParameters.trackerMinSize = 60.0f;
-//        tfodParameters.inputSize = 1280;
+        tfodParameters.minResultConfidence = 0.8f;
+        tfodParameters.isModelTensorFlow2 = true;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 
         // Use loadModelFromAsset() if the TF Model is built in as an asset by Android Studio
         // Use loadModelFromFile() if you have downloaded a custom team model to the Robot Controller's FLASH.
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
-        // tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
     }
 }
