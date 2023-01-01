@@ -144,7 +144,7 @@ public class TensorFlowOpMode extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.8f;
+        tfodParameters.minResultConfidence = 0.9f;
         tfodParameters.isModelTensorFlow2 = true;
 
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
