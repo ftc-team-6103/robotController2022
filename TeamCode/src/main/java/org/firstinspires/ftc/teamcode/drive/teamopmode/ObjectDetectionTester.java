@@ -52,7 +52,7 @@ import java.util.List;
  * is explained below.
  */
 @TeleOp(name = "Custom Sleeve", group = "Concept")
-@Disabled
+//@Disabled
 public class ObjectDetectionTester extends LinearOpMode {
 
     /*
