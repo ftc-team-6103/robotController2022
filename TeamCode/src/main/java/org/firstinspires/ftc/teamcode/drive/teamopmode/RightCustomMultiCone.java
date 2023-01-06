@@ -14,10 +14,12 @@ import org.firstinspires.ftc.teamcode.hardware.Arm;
 import org.firstinspires.ftc.teamcode.hardware.Claw;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 
 @Config
+@Disabled
 @Autonomous(group = "drive")
-public class LeftCustomMultiCone extends Left {
+public class RightCustomMultiCone extends Left {
 
     private Claw claw;
     private Servo clawServo;
@@ -28,12 +30,12 @@ public class LeftCustomMultiCone extends Left {
 
     private Pose2d poseHome = new Pose2d(0,0,0);
     private Pose2d poseBackup = new Pose2d(-55,0,0);
-    private Pose2d poseMediumPole = new Pose2d(-42,4.5, 0.93);
-    private Pose2d poseConeStack = new Pose2d(-46, -20, 1.6);
+    private Pose2d poseMediumPole = new Pose2d(-42,-4.5, 5.35);
+    private Pose2d poseConeStack = new Pose2d(-51, 19, 4.73);
 
-    private Pose2d poseParking1 = new Pose2d(-46, -25, 1.6);
+    private Pose2d poseParking1 = new Pose2d(-46, -25, 0);
     private Pose2d poseParking2 = new Pose2d(-46, 0, 0);
-    private Pose2d poseParking3 = new Pose2d(-50, 30, 0);
+    private Pose2d poseParking3 = new Pose2d(-51, 25, 4.73);
 
     private Trajectory trajectoryHomeToBackUp = null;
     private Trajectory trajectoryBackUpToPole = null;
@@ -101,7 +103,7 @@ public class LeftCustomMultiCone extends Left {
         for (int i=0; i<2; i++) {
             sleep(500);
             trajectoryPoleToConeStack = drive.trajectoryBuilder(poseMediumPole, true)
-                    .splineTo(new Vector2d(-46, -20), Math.toRadians(270))
+                    .splineTo(new Vector2d(poseConeStack.getX(), poseConeStack.getY()), Math.toRadians(100))
 //                    .lineToLinearHeading(poseConeStack)
                     .build();
 
@@ -142,12 +144,13 @@ public class LeftCustomMultiCone extends Left {
         trajectoryPoleToParkingPosition2 = drive.trajectoryBuilder(poseMediumPole)
                 .lineToLinearHeading(poseParking2)
                 .build();
-        trajectoryPoleToParkingPosition3 = drive.trajectoryBuilder(poseMediumPole)
-                .lineToLinearHeading(poseParking3)
-                .build();
 
         TrajectorySequence sequence = drive.trajectorySequenceBuilder(poseMediumPole)
                 .back(2)
+                .lineToLinearHeading(poseParking3)
+                .build();
+
+                trajectoryPoleToParkingPosition3 = drive.trajectoryBuilder(poseMediumPole)
                 .lineToLinearHeading(poseParking3)
                 .build();
 
@@ -158,8 +161,8 @@ public class LeftCustomMultiCone extends Left {
             drive.followTrajectory(trajectoryPoleToParkingPosition1);
         }
         else{
+//            drive.followTrajectory(trajectoryPoleToParkingPosition3);
             drive.followTrajectorySequence(sequence);
         }
-
     }
 }

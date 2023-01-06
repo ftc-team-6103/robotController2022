@@ -23,9 +23,9 @@ public class PowerPlayOpMode extends LinearOpMode {
     private DigitalChannel liftButtonSensor;
     private long toggleTimer = System.currentTimeMillis();
 
-    private static final double THROTTLE = 0.4;
-    private static final double STRAFE_THROTTLE = 0.4;
-    private static final double ROTATION_THROTTLE = 0.4;
+    private static final double THROTTLE = 0.5;
+    private static final double STRAFE_THROTTLE = 0.5;
+    private static final double ROTATION_THROTTLE = 0.5;
 
     @Override
     public void runOpMode() throws InterruptedException{

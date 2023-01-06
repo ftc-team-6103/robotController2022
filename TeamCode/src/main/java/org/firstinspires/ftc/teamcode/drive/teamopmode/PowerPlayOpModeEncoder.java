@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.drive.teamopmode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.hardware.Claw;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(group = "drive")
+@Disabled
 public class PowerPlayOpModeEncoder extends LinearOpMode {
 
     private Claw claw;

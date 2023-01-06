@@ -8,7 +8,7 @@ import org.checkerframework.checker.units.qual.A;
 
 public class Lift {
 
-    public static int LIFT_CONE_STACK = -300;
+    public static int LIFT_CONE_STACK = -350;
 
     public static int POSITION_GROUND = 0;
     public static int POSITION_LOW_TERMINAL = -1800;
