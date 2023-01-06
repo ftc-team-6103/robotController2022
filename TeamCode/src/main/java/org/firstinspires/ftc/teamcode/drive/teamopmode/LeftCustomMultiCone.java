@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.drive.teamopmode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -12,9 +13,9 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.Arm;
 import org.firstinspires.ftc.teamcode.hardware.Claw;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Config
-@Disabled
 @Autonomous(group = "drive")
 public class LeftCustomMultiCone extends Left {
 
@@ -27,12 +28,12 @@ public class LeftCustomMultiCone extends Left {
 
     private Pose2d poseHome = new Pose2d(0,0,0);
     private Pose2d poseBackup = new Pose2d(-55,0,0);
-    private Pose2d poseMediumPole = new Pose2d(-43,5, 0.93);
+    private Pose2d poseMediumPole = new Pose2d(-42,4.5, 0.93);
     private Pose2d poseConeStack = new Pose2d(-46, -20, 1.6);
 
-    private Pose2d poseParking1 = new Pose2d(-31.29, -26, 0);
-    private Pose2d poseParking2 = new Pose2d(-29.29, 0, 0);
-    private Pose2d poseParking3 = new Pose2d(-29.29, 26, 0);
+    private Pose2d poseParking1 = new Pose2d(-46, -25, 1.6);
+    private Pose2d poseParking2 = new Pose2d(-46, 0, 0);
+    private Pose2d poseParking3 = new Pose2d(-50, 30, 0);
 
     private Trajectory trajectoryHomeToBackUp = null;
     private Trajectory trajectoryBackUpToPole = null;
@@ -61,9 +62,10 @@ public class LeftCustomMultiCone extends Left {
 
         waitForStart();
 
+
         double start = this.getRuntime();
 
-        while (this.getRuntime() < start + 2){
+        while (this.getRuntime() < start + 0.5){
             telemetry.addData("runtime", this.getRuntime());
             telemetry.update();
             randomization = detectSignal();
@@ -73,7 +75,7 @@ public class LeftCustomMultiCone extends Left {
         telemetry.update();
 
         claw.close();
-        sleep(1000);
+        sleep(250);
         lift.adjustUp();
 
         trajectoryHomeToBackUp = drive.trajectoryBuilder(poseHome)
@@ -92,40 +94,44 @@ public class LeftCustomMultiCone extends Left {
 
         drive.followTrajectory(trajectoryBackUpToPole);
         sleep(1000);
-        lift.moveToPosition(Lift.POSITION_MID_TERMINAL + 350);
-        sleep(1000);
-        claw.open();
-        sleep(1000);
-        trajectoryPoleToConeStack = drive.trajectoryBuilder(poseMediumPole)
-                .lineToLinearHeading(poseConeStack)
-                .build();
-
-        drive.followTrajectory(trajectoryPoleToConeStack);
-
-        arm.rotateRear();
-
-        sleep(500);
-
-        lift.moveToPosition(Lift.LIFT_CONE_STACK);
-
-        sleep(500);
-        claw.close();
-        sleep(500);
-        lift.moveToPositionAsync(Lift.POSITION_MID_TERMINAL);
-
-        trajectoryConeStackToPole = drive.trajectoryBuilder(poseConeStack)
-                .lineToLinearHeading(poseMediumPole)
-                .build();
-        drive.followTrajectory(trajectoryConeStackToPole);
-
-        arm.rotateForward();
-        sleep(1000);
-        lift.moveToPosition(Lift.POSITION_MID_TERMINAL + 350);
+        lift.moveToPosition(Lift.POSITION_MID_TERMINAL + 400);
+        sleep(250);
         claw.open();
 
+        for (int i=0; i<2; i++) {
+            sleep(500);
+            trajectoryPoleToConeStack = drive.trajectoryBuilder(poseMediumPole, true)
+                    .splineTo(new Vector2d(-46, -20), Math.toRadians(270))
+//                    .lineToLinearHeading(poseConeStack)
+                    .build();
 
+            drive.followTrajectory(trajectoryPoleToConeStack);
 
-//        driveToParkingPosition(drive);
+            arm.rotateRear();
+
+            sleep(500);
+
+            lift.moveToPosition(Lift.LIFT_CONE_STACK);
+
+            sleep(250);
+            claw.close();
+            sleep(250);
+            lift.moveToPositionAsync(Lift.POSITION_MID_TERMINAL);
+
+            trajectoryConeStackToPole = drive.trajectoryBuilder(poseConeStack)
+                    .splineTo(new Vector2d(poseMediumPole.getX(), poseMediumPole.getY()), poseMediumPole.getHeading())
+//                    .lineToLinearHeading(poseMediumPole)
+                    .build();
+            drive.followTrajectory(trajectoryConeStackToPole);
+
+            arm.rotateForward();
+            sleep(1000);
+            lift.moveToPosition(Lift.POSITION_MID_TERMINAL + 600);
+            sleep(250);
+            claw.open();
+        }
+
+        driveToParkingPosition(drive);
 //        lift.moveToPosition(Lift.POSITION_GROUND);
     }
 
@@ -140,6 +146,11 @@ public class LeftCustomMultiCone extends Left {
                 .lineToLinearHeading(poseParking3)
                 .build();
 
+        TrajectorySequence sequence = drive.trajectorySequenceBuilder(poseMediumPole)
+                .back(2)
+                .lineToLinearHeading(poseParking3)
+                .build();
+
         if (randomization.equals("Lightning")){
             drive.followTrajectory(trajectoryPoleToParkingPosition2);
         }
@@ -147,7 +158,7 @@ public class LeftCustomMultiCone extends Left {
             drive.followTrajectory(trajectoryPoleToParkingPosition1);
         }
         else{
-            drive.followTrajectory(trajectoryPoleToParkingPosition3);
+            drive.followTrajectorySequence(sequence);
         }
 
     }
