@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.drive.teamopmode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -23,15 +24,16 @@ public class LeftKoski extends TensorFlowOpMode {
     private Lift lift;
     private DcMotor liftMotor;
 
-    private Pose2d poseHome = new Pose2d(0,0,0);
-    private Pose2d poseBackup = new Pose2d(-36.15,0,0);
+    private Pose2d poseHome = new Pose2d(0,0,Math.toRadians(0));
+    //private Pose2d poseBackup = new Pose2d(-36.15,0,180);
+    private Vector2d faceThePole = new Vector2d(-5,0);
     private Pose2d poseMediumPole = new Pose2d(-29.29,2.77, -0.8);
 
     private Pose2d poseParking1 = new Pose2d(-31.29, -26, 0);
     private Pose2d poseParking2 = new Pose2d(-29.29, 0, 0);
     private Pose2d poseParking3 = new Pose2d(-29.29, 26, 0);
 
-    private Trajectory trajectoryHomeToBackUp = null;
+    private Trajectory trajectoryHomeToFaceThePole = null;
     private Trajectory trajectoryBackUpToPole = null;
     private Trajectory trajectoryPoleToParkingPosition1 = null;
     private Trajectory trajectoryPoleToParkingPosition2 = null;
@@ -40,7 +42,7 @@ public class LeftKoski extends TensorFlowOpMode {
     private String randomization = "";
 
     @Override
-    public void runOpMode() throws InterruptedException{
+    public void runOpMode() throws InterruptedException {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
@@ -57,7 +59,7 @@ public class LeftKoski extends TensorFlowOpMode {
 
         double start = this.getRuntime();
 
-        while (this.getRuntime() < start + 2){
+        while (this.getRuntime() < start + 2) {
             telemetry.addData("runtime", this.getRuntime());
             telemetry.update();
             randomization = detectSignal();
@@ -68,34 +70,37 @@ public class LeftKoski extends TensorFlowOpMode {
 
 
         claw.close();
-        sleep(1000);
+        sleep(250);
         lift.adjustUp();
 
-        trajectoryHomeToBackUp = drive.trajectoryBuilder(poseHome)
-                .lineToLinearHeading(poseBackup)
+        drive.setPoseEstimate(poseHome);
+
+        trajectoryHomeToFaceThePole = drive.trajectoryBuilder(poseHome)
+                .splineTo(faceThePole,Math.toRadians(180))
                 .build();
 
-        drive.followTrajectory(trajectoryHomeToBackUp);
+        drive.followTrajectory(trajectoryHomeToFaceThePole);
 
-        lift.moveToPosition(Lift.POSITION_MID_TERMINAL);
-
-        trajectoryBackUpToPole = drive.trajectoryBuilder(poseBackup)
-                .lineToLinearHeading(poseMediumPole)
-                .build();
-
-        drive.followTrajectory(trajectoryBackUpToPole);
-
-        sleep(1000);
-        arm.rotateRear();
-        sleep(2000);
-        lift.moveToPosition(Lift.POSITION_MID_TERMINAL + 350);
-        sleep(1000);
-        claw.open();
-        sleep(1000);
-        arm.rotateForward();
-        sleep(1000);
-        driveToParkingPosition(drive);
-        lift.moveToPosition(Lift.POSITION_GROUND);
+//        lift.moveToPosition(Lift.POSITION_MID_TERMINAL);
+//
+//        trajectoryBackUpToPole = drive.trajectoryBuilder(poseBackup)
+//                .lineToLinearHeading(poseMediumPole)
+//                .build();
+//
+//        drive.followTrajectory(trajectoryBackUpToPole);
+//
+//        sleep(1000);
+//        arm.rotateRear();
+//        sleep(2000);
+//        lift.moveToPosition(Lift.POSITION_MID_TERMINAL + 350);
+//        sleep(1000);
+//        claw.open();
+//        sleep(1000);
+//        arm.rotateForward();
+//        sleep(1000);
+//        driveToParkingPosition(drive);
+//        lift.moveToPosition(Lift.POSITION_GROUND);
+//    }
     }
 
     private void driveToParkingPosition(SampleMecanumDrive drive){
