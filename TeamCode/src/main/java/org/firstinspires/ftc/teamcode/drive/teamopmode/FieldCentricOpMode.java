@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.drive.teamopmode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -16,7 +15,6 @@ import org.firstinspires.ftc.teamcode.hardware.Claw;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(group = "drive")
-@Disabled
 public class FieldCentricOpMode extends LinearOpMode {
 
     private Claw claw;
@@ -69,10 +67,10 @@ public class FieldCentricOpMode extends LinearOpMode {
             double rotationY = x * Math.sin(botHeading) + y * Math.cos(botHeading);
 
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double leftFrontPower = (rotationY  + rotationX + rx) / denominator;
-            double leftRearPower = (rotationY - rotationX + rx) / denominator;
-            double rightFrontPower = (rotationY - rotationX - rx) / denominator;
-            double rightRearPower = (rotationY + rotationX - rx) / denominator;
+            double leftFrontPower = (rotationY  + rotationX + rx);
+            double leftRearPower = (rotationY - rotationX + rx);
+            double rightFrontPower = (rotationY - rotationX - rx);
+            double rightRearPower = (rotationY + rotationX - rx);
 
             if (gamepad2.a){
                 claw.close();
@@ -136,6 +134,23 @@ public class FieldCentricOpMode extends LinearOpMode {
         }
 
         return false;
+    }
+
+    /**
+     * If the button sensor is not pressed and the arm thinks it's all the way lower,
+     * manually lower it until the button sensor is pressed and then reset encoder
+     */
+    private void calibrateGround(){
+//        if (liftButtonSensor.getState() && lift.getCurrentPosition().equals("GROUND 0") && Math.abs(liftMotor.getCurrentPosition()) <= 5){
+//            liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            long start = System.currentTimeMillis();
+//            long current = start;
+//            while (liftButtonSensor.getState() && current - start < 250){
+//                current = System.currentTimeMillis();
+//                lift.lower(0.2);
+//            }
+//            liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        }
     }
 
     /**
