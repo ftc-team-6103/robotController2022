@@ -25,7 +25,7 @@ public class FieldCentricTeleOp extends LinearOpMode {
     private long toggleTimer = System.currentTimeMillis();
 
     private static final double THROTTLE = 0.5;
-    private static final double STRAFE_THROTTLE = 0.65;
+    private static final double STRAFE_THROTTLE = 0.5;
     private static final double ROTATION_THROTTLE = 0.5;
 
     @Override
@@ -41,9 +41,6 @@ public class FieldCentricTeleOp extends LinearOpMode {
         lift = new Lift(liftMotor, liftButtonSensor, false);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        Pose2d startPose = new Pose2d(0, 0, 4.71);
-        drive.setPoseEstimate(startPose);
 
         waitForStart();
 
@@ -70,10 +67,6 @@ public class FieldCentricTeleOp extends LinearOpMode {
             );
 
             drive.update();
-
-            if (gamepad1.y){
-                drive.setPoseEstimate(new Pose2d());
-            }
 
             if (gamepad2.a){
                 claw.close();
@@ -102,7 +95,6 @@ public class FieldCentricTeleOp extends LinearOpMode {
             telemetry.addData("Lift Motor Position: ", liftMotor.getCurrentPosition());
             telemetry.addData("Lift Position: ", lift.getCurrentPosition());
             telemetry.addData("Lift Button Sensor: ", liftButtonSensor.getState());
-            telemetry.addData("Heading", drive.getPoseEstimate().getHeading());
             telemetry.update();
         }
     }
