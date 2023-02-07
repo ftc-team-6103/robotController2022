@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Config
 @Autonomous(group = "drive")
+@Disabled
 public class LeftCustomMultiCone extends Left {
 
     private Claw claw;

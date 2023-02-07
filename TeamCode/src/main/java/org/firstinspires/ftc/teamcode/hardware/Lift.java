@@ -115,9 +115,8 @@ public class Lift {
 
     public void adjustDown(){
         int encoderValue = liftMotor.getCurrentPosition();
-        if (currentPosition != POSITION_GROUND && encoderValue + ADJUSTMENT < POSITION_GROUND){
-            moveToPositionAsync(encoderValue + ADJUSTMENT, 0.25);
-        }
+
+        moveToPositionAsync(encoderValue + ADJUSTMENT, 0.25);
 
         while (liftMotor.isBusy()){
             //wait for lift motor to move to position
