@@ -24,9 +24,9 @@ public class FieldCentricTeleOp extends LinearOpMode {
     private DigitalChannel liftButtonSensor;
     private long toggleTimer = System.currentTimeMillis();
 
-    private static final double THROTTLE = 0.5;
-    private static final double STRAFE_THROTTLE = 0.65;
-    private static final double ROTATION_THROTTLE = 0.5;
+    private static final double THROTTLE = 0.75;
+    private static final double STRAFE_THROTTLE = 0.9;
+    private static final double ROTATION_THROTTLE = 0.75            ;
 
     @Override
     public void runOpMode() throws InterruptedException{
