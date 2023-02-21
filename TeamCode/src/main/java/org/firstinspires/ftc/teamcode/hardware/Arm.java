@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Arm {
 
     private double ARM_POSITION_FORWARD = 0.0;
-    private double ARM_POSITION_REAR = 1.0;
+    private double ARM_POSITION_REAR = 0.5;
 
     private Servo armServo;
 
